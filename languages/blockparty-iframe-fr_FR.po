@@ -1,0 +1,39 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Blockparty Iframe 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/blockparty-iframe\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-12-24T13:21:01+00:00\n"
+"PO-Revision-Date: 2025-12-24 14:21+0100\n"
+"Language: fr_FR\n"
+"X-Generator: Poedit 3.8\n"
+"X-Domain: blockparty-iframe\n"
+
+#. Plugin Name of the plugin
+#: blockparty-iframe.php
+msgid "Blockparty Iframe"
+msgstr "Blockparty Cadre"
+
+#. Description of the plugin
+#: blockparty-iframe.php
+msgid "Add a block to display an embedded frame in the WordPress editor."
+msgstr "Ajoute un bloc pour afficher un cadre intégré dans l’éditeur WordPress."
+
+#. Author of the plugin
+#: blockparty-iframe.php
+msgid "Be API Technical team"
+msgstr "L’ équipe technique de Be API"
+
+#: build/blockparty-iframe/block.json
+msgctxt "block title"
+msgid "Iframe"
+msgstr "Cadre"
+
+#: build/blockparty-iframe/block.json
+msgctxt "block description"
+msgid "Display an embedded frame."
+msgstr "Affiche un cadre intégré."
