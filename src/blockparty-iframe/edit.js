@@ -116,7 +116,8 @@ export default function Edit( { attributes, setAttributes } ) {
 					icon={ aspectRatio }
 					label={ __( 'Iframe', 'blockparty-iframe' ) }
 					instructions={ __(
-						'Fill the URL and the title of the iframe.'
+						'Fill the URL and the title of the iframe.',
+						'blockparty-iframe'
 					) }
 				>
 					<div style={ { width: '100%' } }>
