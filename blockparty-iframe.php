@@ -13,6 +13,8 @@
  * @package CreateBlock
  */
 
+namespace Blockparty\Iframe;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -67,7 +69,7 @@ function init() {
 	init_i18n();
 }
 
-add_action( 'init', 'init' );
+add_action( 'init', __NAMESPACE__ . '\\init' );
 
 /**
  * Load the plugin translations.
