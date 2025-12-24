@@ -84,17 +84,19 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	return (
 		<div { ...blockProps }>
-			<BlockControls>
-				<ToolbarGroup>
-					<ToolbarButton
-						onClick={ () => setHasConfirmed( ! hasConfirmed ) }
-					>
-						{ hasConfirmed
-							? __( 'Replace', 'blockparty-iframe' )
-							: __( 'View', 'blockparty-iframe' ) }
-					</ToolbarButton>
-				</ToolbarGroup>
-			</BlockControls>
+			{ isIframeElligible && (
+				<BlockControls>
+					<ToolbarGroup>
+						<ToolbarButton
+							onClick={ () => setHasConfirmed( ! hasConfirmed ) }
+						>
+							{ hasConfirmed
+								? __( 'Replace', 'blockparty-iframe' )
+								: __( 'View', 'blockparty-iframe' ) }
+						</ToolbarButton>
+					</ToolbarGroup>
+				</BlockControls>
+			) }
 
 			<InspectorControls>
 				<PanelBody title={ __( 'Settings', 'blockparty-iframe' ) }>
