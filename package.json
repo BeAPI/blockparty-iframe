@@ -1,6 +1,6 @@
 {
 	"name": "blockparty-iframe",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Add a block to display an embedded frame in the WordPress editor.",
 	"author": "Be API Technical team",
 	"license": "GPL-2.0-or-later",

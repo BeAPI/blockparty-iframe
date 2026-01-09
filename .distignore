@@ -1,25 +1,32 @@
+# Directories
 /.git
 /.github
-/.wordpress-org
 /node_modules
 /src
 
+# Configuration files
 .distignore
 .editorconfig
 .gitattributes
 .gitignore
 .plugin-data
 .wp-env.json
-CHANGELOG.md
+grumphp.yml
+phpcs.xml.dist
+psalm.xml.dist
+
+# Dependency management
 composer.json
 composer.lock
-grumphp.yml
-LICENSE.md
 package.json
 package-lock.json
-phpcs.xml.dist
-phpunit.xml.dist
-psalm.xml.dist
+
+# Documentation (GitHub)
+CHANGELOG.md
 README.md
-webpack.config.js
-yarn.lock
+
+# Development files
+*.log
+*.map
+.DS_Store
+Thumbs.db
