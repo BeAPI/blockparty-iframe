@@ -3,14 +3,13 @@
          name="Project"
          xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/master/phpcs.xsd">
 
-    <description>Description</description>
+    <description>Blockparty Iframe coding standards</description>
 
     <!-- Scan all files in directory -->
-    <file>index-file.php</file>
-    <file>./includes/</file>
-    <file>./views/</file>
+    <file>blockparty-iframe.php</file>
 
     <exclude-pattern>./build/</exclude-pattern>
+    <exclude-pattern>./languages/</exclude-pattern>
     <exclude-pattern>./node_modules/</exclude-pattern>
     <exclude-pattern>./src/</exclude-pattern>
     <exclude-pattern>./tools/</exclude-pattern>
@@ -31,18 +30,18 @@
         <exclude name="WordPress.PHP.DisallowShortTernary.Found"/>
     </rule>
 
-    <config name="minimum_supported_wp_version" value="6.0"/>
+    <config name="minimum_supported_wp_version" value="6.7"/>
 
     <rule ref="WordPress.WP.I18n">
         <properties>
             <property name="text_domain" type="array">
-                <element value="my-custom-test-domain"/>
+                <element value="blockparty-iframe"/>
             </property>
         </properties>
     </rule>
 
     <rule ref="PHPCompatibility"/>
-    <config name="testVersion" value="8.3.25"/>
+    <config name="testVersion" value="8.1-"/>
 
     <!-- Scan only PHP files -->
     <arg name="extensions" value="php"/>
