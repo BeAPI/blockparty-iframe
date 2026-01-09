@@ -24,6 +24,11 @@ define( 'BLOCKPARTY_IFRAME_URL', plugin_dir_url( __FILE__ ) );
 define( 'BLOCKPARTY_IFRAME_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BLOCKPARTY_IFRAME_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
+// Require vendor
+if ( file_exists( BLOCKPARTY_IFRAME_DIR . '/vendor/autoload.php' ) ) {
+	require BLOCKPARTY_IFRAME_DIR . '/vendor/autoload.php';
+}
+
 /**
  * Registers the block using a `blocks-manifest.php` file, which improves the performance of block type registration.
  * Behind the scenes, it also registers all assets so they can be enqueued
