@@ -2,9 +2,9 @@
 /**
  * Plugin Name:       Blockparty Iframe
  * Description:       Add a block to display an embedded frame in the WordPress editor.
- * Version:           1.0.0
+ * Version:           1.0.1
  * Requires at least: 6.7
- * Requires PHP:      7.4
+ * Requires PHP:      8.1
  * Author:            Be API Technical team
  * License:           GPL-2.0-or-later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
@@ -19,10 +19,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
-define( 'BLOCKPARTY_IFRAME_VERSION', '1.0.0' );
+define( 'BLOCKPARTY_IFRAME_VERSION', '1.0.1' );
 define( 'BLOCKPARTY_IFRAME_URL', plugin_dir_url( __FILE__ ) );
 define( 'BLOCKPARTY_IFRAME_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BLOCKPARTY_IFRAME_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
+
+// Require vendor
+if ( file_exists( BLOCKPARTY_IFRAME_DIR . '/vendor/autoload.php' ) ) {
+	require BLOCKPARTY_IFRAME_DIR . '/vendor/autoload.php';
+}
 
 /**
  * Registers the block using a `blocks-manifest.php` file, which improves the performance of block type registration.
