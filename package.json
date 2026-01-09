@@ -1,0 +1,31 @@
+{
+	"name": "blockparty-iframe",
+	"version": "1.0.0",
+	"description": "Add a block to display an embedded frame in the WordPress editor.",
+	"author": "Be API Technical team",
+	"license": "GPL-2.0-or-later",
+	"main": "build/index.js",
+	"scripts": {
+		"build": "wp-scripts build --blocks-manifest",
+		"format": "wp-scripts format",
+		"lint:css": "wp-scripts lint-style",
+		"lint:js": "wp-scripts lint-js",
+		"packages-update": "wp-scripts packages-update",
+		"plugin-zip": "wp-scripts plugin-zip",
+		"start": "wp-scripts start --blocks-manifest",
+		"start:env": "wp-env start --config=./wp-env.json",
+		"stop:env": "wp-env stop --config=./wp-env.json"
+	},
+	"devDependencies": {
+		"@wordpress/env": "^10.37.0",
+		"@wordpress/scripts": "latest",
+		"@wordpress/url": "^4.37.0",
+		"lodash": "^4.17.21"
+	},
+	"dependencies": {
+		"@wordpress/block-editor": "latest",
+		"@wordpress/blocks": "latest",
+		"@wordpress/i18n": "latest",
+		"@wordpress/icons": "^11.4.0"
+	}
+}

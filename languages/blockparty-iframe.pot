@@ -1,0 +1,84 @@
+# Copyright (C) 2025 Be API Technical team
+# This file is distributed under the GPL-2.0-or-later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Blockparty Iframe 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/blockparty-iframe\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-12-24T14:09:32+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: blockparty-iframe\n"
+
+#. Plugin Name of the plugin
+#: blockparty-iframe.php
+msgid "Blockparty Iframe"
+msgstr ""
+
+#. Description of the plugin
+#: blockparty-iframe.php
+msgid "Add a block to display an embedded frame in the WordPress editor."
+msgstr ""
+
+#. Author of the plugin
+#: blockparty-iframe.php
+msgid "Be API Technical team"
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "Replace"
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "View"
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "Settings"
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "Enable lazyloading"
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "Iframe"
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "Fill the URL and the title of the iframe."
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "URL"
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "The URL is invalid."
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "Title"
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "The title of the iframe is used for accessibility purposes and it will only be visible to screen readers."
+msgstr ""
+
+#: build/blockparty-iframe/index.js:1
+msgid "Add iframe"
+msgstr ""
+
+#: build/blockparty-iframe/block.json
+msgctxt "block title"
+msgid "Iframe"
+msgstr ""
+
+#: build/blockparty-iframe/block.json
+msgctxt "block description"
+msgid "Display an embedded frame."
+msgstr ""
