@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "blockparty/iframe",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"title": "Iframe",
 	"category": "widgets",
 	"description": "Display an embedded frame.",
