@@ -39,6 +39,7 @@ import { useState } from '@wordpress/element';
 import './editor.scss';
 
 import { aspectRatio } from '@wordpress/icons';
+import { convertAttributesToProps, parseIframeCode } from './utils';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -50,12 +51,18 @@ import { aspectRatio } from '@wordpress/icons';
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const blockProps = useBlockProps();
-	const { lazyload, title: initialTitle, url: initialUrl } = attributes;
+	const {
+		lazyload,
+		title: initialTitle,
+		url: initialUrl,
+		iframeAttributes: initialAttributes,
+	} = attributes;
 
 	// State local pour les champs TextControl
 	const [ iframeData, setIframeData ] = useState( {
 		url: initialUrl || '',
 		title: initialTitle || '',
+		iframeAttributes: initialAttributes || [],
 	} );
 
 	// hasConfirmed = l’utilisateur a validé l’ajout de l’iframe
@@ -75,6 +82,29 @@ export default function Edit( { attributes, setAttributes } ) {
 
 	const showPlaceholder = ! hasConfirmed;
 	const showIframe = hasConfirmed && isIframeElligible;
+
+	// Handle URL/iframe code change
+	function handleUrlChange( value ) {
+		// Try to parse as iframe code
+		const parsed = parseIframeCode( value );
+
+		if ( parsed ) {
+			// It's an iframe code, extract URL, title, and attributes
+			setIframeData( {
+				...iframeData,
+				url: parsed.url,
+				title: parsed.title || iframeData.title, // Use extracted title if available, otherwise keep current
+				iframeAttributes: parsed.attributes,
+			} );
+		} else {
+			// It's a regular URL
+			setIframeData( {
+				...iframeData,
+				url: value,
+				iframeAttributes: [],
+			} );
+		}
+	}
 
 	// Handle clic Add iframe
 	function handleAddIframeButtonClick() {
@@ -118,28 +148,20 @@ export default function Edit( { attributes, setAttributes } ) {
 					icon={ aspectRatio }
 					label={ __( 'Iframe', 'blockparty-iframe' ) }
 					instructions={ __(
-						'Fill the URL and the title of the iframe.',
+						'Fill the iframe source and the title of the iframe.',
 						'blockparty-iframe'
 					) }
 				>
 					<div style={ { width: '100%' } }>
 						<TextControl
-							label={ __( 'URL', 'blockparty-iframe' ) }
+							label={ __( 'Source', 'blockparty-iframe' ) }
 							value={ iframeData.url }
-							onChange={ ( value ) =>
-								setIframeData( { ...iframeData, url: value } )
-							}
-							placeholder="https://..."
-							type="url"
-							help={
-								iframeData.url.length &&
-								! isURL( iframeData.url )
-									? __(
-											'The URL is invalid.',
-											'blockparty-iframe'
-									  )
-									: ''
-							}
+							onChange={ handleUrlChange }
+							placeholder={ `https://... or <iframe src="https://..."` }
+							help={ __(
+								'You can either paste a URL or the iframe code.',
+								'blockparty-iframe'
+							) }
 						/>
 
 						<TextControl
@@ -170,6 +192,9 @@ export default function Edit( { attributes, setAttributes } ) {
 					title={ iframeData.title }
 					src={ iframeData.url }
 					loading={ lazyload ? 'lazy' : 'eager' }
+					{ ...convertAttributesToProps(
+						iframeData.iframeAttributes
+					) }
 				/>
 			) }
 		</div>

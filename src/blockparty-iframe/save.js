@@ -5,6 +5,7 @@
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
 import { useBlockProps } from '@wordpress/block-editor';
+import { convertAttributesToProps } from './utils';
 
 /**
  * The save function defines the way in which the different attributes should
@@ -16,7 +17,7 @@ import { useBlockProps } from '@wordpress/block-editor';
  * @return {Element} Element to render.
  */
 export default function save( { attributes } ) {
-	const { lazyload, title, url } = attributes;
+	const { lazyload, title, url, iframeAttributes } = attributes;
 
 	if ( ! url || ! title ) {
 		return <div { ...useBlockProps.save() } />;
@@ -28,6 +29,7 @@ export default function save( { attributes } ) {
 				title={ title }
 				src={ url }
 				loading={ lazyload ? 'lazy' : 'eager' }
+				{ ...convertAttributesToProps( iframeAttributes ) }
 			/>
 		</div>
 	);
