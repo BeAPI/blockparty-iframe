@@ -67,6 +67,7 @@ export function isExcludedIframeAttribute( attributeName ) {
 		'title', // Managed separately
 		'width', // Managed by block dimension supports
 		'height', // Managed by block dimension supports
+		'style', // Requires object format in React, not string
 		'frameborder', // Deprecated HTML attribute
 		'marginwidth', // Deprecated HTML attribute
 		'marginheight', // Deprecated HTML attribute
@@ -88,13 +89,19 @@ export function isExcludedIframeAttribute( attributeName ) {
 export function parseIframeCode( value ) {
 	// Check if the value contains iframe tag
 	const iframeRegex = /<iframe[^>]*>/i;
-	if ( ! iframeRegex.test( value ) ) {
+	const match = value.match( iframeRegex );
+
+	if ( ! match ) {
 		return null;
 	}
 
+	// Extract only the opening tag (ignore any content inside iframe)
+	const iframeTag = match[ 0 ];
+
 	// Create a temporary DOM element to parse the HTML
+	// Use a self-closing iframe to avoid parsing issues with content
 	const tempDiv = document.createElement( 'div' );
-	tempDiv.innerHTML = value;
+	tempDiv.insertAdjacentHTML( 'beforeend', iframeTag + '</iframe>' );
 	const iframeElement = tempDiv.querySelector( 'iframe' );
 
 	if ( ! iframeElement ) {

@@ -148,33 +148,20 @@ export default function Edit( { attributes, setAttributes } ) {
 					icon={ aspectRatio }
 					label={ __( 'Iframe', 'blockparty-iframe' ) }
 					instructions={ __(
-						'Fill the URL or paste iframe code, and the title of the iframe.',
+						'Fill the iframe source and the title of the iframe.',
 						'blockparty-iframe'
 					) }
 				>
 					<div style={ { width: '100%' } }>
 						<TextControl
-							label={ __(
-								'URL or iframe code',
-								'blockparty-iframe'
-							) }
+							label={ __( 'Source', 'blockparty-iframe' ) }
 							value={ iframeData.url }
 							onChange={ handleUrlChange }
-							placeholder="https://... or <iframe>...</iframe>"
-							help={
-								iframeData.url.length &&
-								! isURL( iframeData.url )
-									? __(
-											'The URL is invalid.',
-											'blockparty-iframe'
-									  )
-									: iframeData.iframeAttributes.length > 0
-									? __(
-											'Iframe code detected. Attributes extracted.',
-											'blockparty-iframe'
-									  )
-									: ''
-							}
+							placeholder={ `https://... or <iframe src="https://..."` }
+							help={ __(
+								'You can either paste a URL or the iframe code.',
+								'blockparty-iframe'
+							) }
 						/>
 
 						<TextControl
