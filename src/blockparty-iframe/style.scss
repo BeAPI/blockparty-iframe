@@ -11,4 +11,9 @@
 		width: 100%;
 		height: 100%;
 	}
+
+	&:not(.has-aspect-ratio) {
+		aspect-ratio: 1;
+		min-height: unset;
+	}
 }

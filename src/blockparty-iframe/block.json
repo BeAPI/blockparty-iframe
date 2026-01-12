@@ -28,6 +28,21 @@
 		"url": {
 			"type": "string",
 			"default": ""
+		},
+		"iframeAttributes": {
+			"type": "array",
+			"default": [],
+			"items": {
+				"type": "object",
+				"properties": {
+					"key": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					}
+				}
+			}
 		}
 	},
 	"textdomain": "blockparty-iframe",
