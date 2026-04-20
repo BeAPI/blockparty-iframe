@@ -1,5 +1,7 @@
 # Blockparty — Iframe
 
+[![Test with WordPress Playground](https://img.shields.io/badge/Test%20with-WordPress%20Playground-0073aa?style=for-the-badge&logo=wordpress&logoColor=white)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/beapi/blockparty-iframe/refs/heads/main/.wordpress-org/blueprints/blueprint.json)
+
 [![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg)](https://www.gnu.org/licenses/gpl-2.0)
 [![WordPress: 6.7+](https://img.shields.io/badge/WordPress-6.7+-green.svg)](https://wordpress.org/)
 [![PHP: 8.1+](https://img.shields.io/badge/PHP-8.1+-purple.svg)](https://php.net/)

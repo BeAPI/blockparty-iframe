@@ -1,0 +1,32 @@
+{
+	"$schema": "https://playground.wordpress.net/blueprint-schema.json",
+	"landingPage": "/blockparty-iframe-demo/",
+	"preferredVersions": {
+		"php": "8.1",
+		"wp": "latest"
+	},
+	"steps": [
+		{
+			"step": "installPlugin",
+			"pluginData": {
+				"resource": "git:directory",
+				"url": "https://github.com/BeAPI/blockparty-iframe",
+				"ref": "1.1.0",
+				"refType": "tag"
+			},
+			"options": {
+				"activate": true,
+				"targetFolderName": "blockparty-iframe"
+			}
+		},
+		{
+			"step": "login",
+			"username": "admin",
+			"password": "password"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php require_once 'wordpress/wp-load.php'; $page_content = '<!-- wp:blockparty/iframe {\"title\":\"Johannes Gutenberg — Wikipédia\",\"url\":\"https://en.wikipedia.org/wiki/Johannes_Gutenberg\",\"align\":\"wide\"} -->\n<div class=\"wp-block-blockparty-iframe alignwide\"><iframe title=\"Johannes Gutenberg — Wikipédia\" src=\"https://en.wikipedia.org/wiki/Johannes_Gutenberg\" loading=\"eager\"></iframe></div>\n<!-- /wp:blockparty/iframe -->'; $page_id = wp_insert_post( array( 'post_title' => 'Blockparty Iframe', 'post_name' => 'blockparty-iframe-demo', 'post_content' => $page_content, 'post_status' => 'publish', 'post_type' => 'page' ) ); echo 'Page created with ID: ' . $page_id; ?>"
+		}
+	]
+}
