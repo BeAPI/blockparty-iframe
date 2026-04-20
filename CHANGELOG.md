@@ -7,6 +7,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.2] - 2026-04-21
+
+### Fixed
+
+- **WordPress.org Playground blueprint**: Generate the demo mu-plugin via a nowdoc so the `wp_kses_allowed_html` iframe allowlist is written as syntactically valid PHP (the previous line-by-string approach could produce a broken file and fatal the Playground). The blueprint `pluginData.ref` now targets tag `1.1.2`.
+
+### Removed
+
+- **Psalm static analysis**: Removed `vimeo/psalm`, `humanmade/psalm-plugin-wordpress`, and `psalm.xml.dist`; dropped the `psalm` Composer script and the Grumphp Psalm task so the dev toolchain relies on PHPCS, PHP parallel lint, and related tooling only (leaner `composer.lock` / install).
+
 ## [1.1.1] - 2026-04-20
 
 ### Fixed
@@ -131,6 +141,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+[1.1.2]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.1.2
 [1.1.1]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.1.1
 [1.1.0]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.1.0
 [1.0.2]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.0.2
