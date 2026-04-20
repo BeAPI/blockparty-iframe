@@ -14,6 +14,8 @@ import { convertAttributesToProps } from './utils';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#save
  *
+ * @param {Object} root0            Block save props.
+ * @param {Object} root0.attributes Block attributes.
  * @return {Element} Element to render.
  */
 export default function save( { attributes } ) {
