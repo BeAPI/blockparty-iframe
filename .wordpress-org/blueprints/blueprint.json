@@ -26,6 +26,10 @@
 		},
 		{
 			"step": "runPHP",
+			"code": "<?php\nrequire_once 'wordpress/wp-load.php';\n$dir = WP_CONTENT_DIR . '/mu-plugins';\nif ( ! is_dir( $dir ) ) {\n\twp_mkdir_p( $dir );\n}\n$file = $dir . '/blockparty-iframe-playground-kses.php';\n$mu_plugin = <<<'BLOCKPARTY_IFRAME_MU'\n<?php\nadd_filter( 'wp_kses_allowed_html', function( $tags, $context ) {\n\tif ( 'post' !== $context ) {\n\t\treturn $tags;\n\t}\n\t$tags['iframe'] = array(\n\t\t'src' => true,\n\t\t'class' => true,\n\t\t'style' => true,\n\t\t'id' => true,\n\t\t'loading' => true,\n\t\t'title' => true,\n\t);\n\treturn $tags;\n}, 10, 2 );\nBLOCKPARTY_IFRAME_MU;\nfile_put_contents( $file, $mu_plugin . \"\\n\" );\necho file_exists( $file ) ? 'mu-plugin installed' : 'mu-plugin failed';\n?>"
+		},
+		{
+			"step": "runPHP",
 			"code": "<?php require_once 'wordpress/wp-load.php'; $page_content = '<!-- wp:blockparty/iframe {\"title\":\"Johannes Gutenberg — Wikipédia\",\"url\":\"https://en.wikipedia.org/wiki/Johannes_Gutenberg\",\"align\":\"wide\"} -->\n<div class=\"wp-block-blockparty-iframe alignwide\"><iframe title=\"Johannes Gutenberg — Wikipédia\" src=\"https://en.wikipedia.org/wiki/Johannes_Gutenberg\" loading=\"eager\"></iframe></div>\n<!-- /wp:blockparty/iframe -->'; $page_id = wp_insert_post( array( 'post_title' => 'Blockparty Iframe', 'post_name' => 'blockparty-iframe-demo', 'post_content' => $page_content, 'post_status' => 'publish', 'post_type' => 'page' ) ); echo 'Page created with ID: ' . $page_id; ?>"
 		}
 	]
