@@ -29,5 +29,8 @@
 		"@wordpress/blocks": "latest",
 		"@wordpress/i18n": "latest",
 		"@wordpress/icons": "^11.4.0"
+	},
+	"volta": {
+		"node": "24.15.0"
 	}
 }
