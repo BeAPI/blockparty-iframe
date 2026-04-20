@@ -11,7 +11,7 @@
 			"pluginData": {
 				"resource": "git:directory",
 				"url": "https://github.com/BeAPI/blockparty-iframe",
-				"ref": "1.1.1",
+				"ref": "1.1.2",
 				"refType": "tag"
 			},
 			"options": {
@@ -23,6 +23,10 @@
 			"step": "login",
 			"username": "admin",
 			"password": "password"
+		},
+		{
+			"step": "runPHP",
+			"code": "<?php\nrequire_once 'wordpress/wp-load.php';\n$dir = WP_CONTENT_DIR . '/mu-plugins';\nif ( ! is_dir( $dir ) ) {\n\twp_mkdir_p( $dir );\n}\n$file = $dir . '/blockparty-iframe-playground-kses.php';\n$mu_plugin = <<<'BLOCKPARTY_IFRAME_MU'\n<?php\nadd_filter( 'wp_kses_allowed_html', function( $tags, $context ) {\n\tif ( 'post' !== $context ) {\n\t\treturn $tags;\n\t}\n\t$tags['iframe'] = array(\n\t\t'src' => true,\n\t\t'class' => true,\n\t\t'style' => true,\n\t\t'id' => true,\n\t\t'loading' => true,\n\t\t'title' => true,\n\t);\n\treturn $tags;\n}, 10, 2 );\nBLOCKPARTY_IFRAME_MU;\nfile_put_contents( $file, $mu_plugin . \"\\n\" );\necho file_exists( $file ) ? 'mu-plugin installed' : 'mu-plugin failed';\n?>"
 		},
 		{
 			"step": "runPHP",
