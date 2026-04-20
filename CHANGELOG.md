@@ -7,6 +7,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.1.1] - 2026-04-20
+
+### Fixed
+
+- **Dependency alignment**: Bump `@wordpress/icons` to ^12.2.0 so the block editor resolves a single icons package version alongside `@wordpress/block-editor`, `@wordpress/components`, and related packages (avoids duplicate bundles and inconsistent icons).
+
 ## [1.1.0] - 2026-01-12
 
 ### 🚀 Added
@@ -125,6 +131,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+[1.1.1]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.1.1
 [1.1.0]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.1.0
 [1.0.2]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.0.2
 [1.0.1]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.0.1

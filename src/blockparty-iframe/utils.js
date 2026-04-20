@@ -120,11 +120,13 @@ export function parseIframeCode( value ) {
 	for ( const attr of iframeElement.attributes ) {
 		if ( ! isExcludedIframeAttribute( attr.name ) ) {
 			// For boolean attributes, store 'true' as value if present
-			const value = isBooleanAttribute( attr.name ) ? 'true' : attr.value;
+			const attrValue = isBooleanAttribute( attr.name )
+				? 'true'
+				: attr.value;
 
 			attributes.push( {
 				key: attr.name,
-				value,
+				value: attrValue,
 			} );
 		}
 	}
