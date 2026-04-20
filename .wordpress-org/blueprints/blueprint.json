@@ -26,7 +26,7 @@
 		},
 		{
 			"step": "runPHP",
-			"code": "<?php\nrequire_once 'wordpress/wp-load.php';\n$dir = WP_CONTENT_DIR . '/mu-plugins';\nif ( ! is_dir( $dir ) ) {\n\twp_mkdir_p( $dir );\n}\n$file = $dir . '/blockparty-iframe-playground-svg-kses.php';\n$lines = array(\n\t'<?php',\n\t'add_filter( \\'wp_kses_allowed_html\\', function( $tags, $context ) {',\n\t'\tif ( \\'post\\' !== $context ) {',\n\t'\t\treturn $tags;',\n\t'\t}',\n\t'\t$tags[\\'iframe\\'] = array(',\n\t'\t\t\\'src\\' => true,',\n\t'\t\t\\'class\\' => true,',\n\t'\t\t\\'style\\' => true,',\n\t'\t\t\\'id\\' => true,','loading\\' => true,',\n\t'\t\t\\'id\\' => true,',\n\t'\t\t\\'title\\' => true,',\n\t'\t);',\n\t'\treturn $tags;',\n\t'}, 10, 2 );',\n);\nfile_put_contents( $file, implode( \"\\n\", $lines ) . \"\\n\" );\necho file_exists( $file ) ? 'mu-plugin installed' : 'mu-plugin failed';\n?>"
+			"code": "<?php\nrequire_once 'wordpress/wp-load.php';\n$dir = WP_CONTENT_DIR . '/mu-plugins';\nif ( ! is_dir( $dir ) ) {\n\twp_mkdir_p( $dir );\n}\n$file = $dir . '/blockparty-iframe-playground-svg-kses.php';\n$mu_plugin = <<<'BLOCKPARTY_IFRAME_MU'\n<?php\nadd_filter( 'wp_kses_allowed_html', function( $tags, $context ) {\n\tif ( 'post' !== $context ) {\n\t\treturn $tags;\n\t}\n\t$tags['iframe'] = array(\n\t\t'src' => true,\n\t\t'class' => true,\n\t\t'style' => true,\n\t\t'id' => true,\n\t\t'loading' => true,\n\t\t'title' => true,\n\t);\n\treturn $tags;\n}, 10, 2 );\nBLOCKPARTY_IFRAME_MU;\nfile_put_contents( $file, $mu_plugin . \"\\n\" );\necho file_exists( $file ) ? 'mu-plugin installed' : 'mu-plugin failed';\n?>"
 		},
 		{
 			"step": "runPHP",
