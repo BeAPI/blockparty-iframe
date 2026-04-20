@@ -47,6 +47,9 @@ import { convertAttributesToProps, parseIframeCode } from './utils';
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/block-api/block-edit-save/#edit
  *
+ * @param {Object}   root0               Block edit props.
+ * @param {Object}   root0.attributes    Block attributes.
+ * @param {Function} root0.setAttributes Updates block attributes.
  * @return {Element} Element to render.
  */
 export default function Edit( { attributes, setAttributes } ) {
