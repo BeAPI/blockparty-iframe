@@ -10,7 +10,7 @@
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       blockparty-iframe
  *
- * @package CreateBlock
+ * @package Blockparty\Iframe
  */
 
 namespace Blockparty\Iframe;
@@ -19,70 +19,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+if ( is_readable( __DIR__ . '/vendor/autoload.php' ) ) {
+	include_once __DIR__ . '/vendor/autoload.php';
+}
+
 define( 'BLOCKPARTY_IFRAME_VERSION', '1.1.2' );
 define( 'BLOCKPARTY_IFRAME_URL', plugin_dir_url( __FILE__ ) );
 define( 'BLOCKPARTY_IFRAME_DIR', plugin_dir_path( __FILE__ ) );
 define( 'BLOCKPARTY_IFRAME_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 
-// Require vendor
-if ( file_exists( BLOCKPARTY_IFRAME_DIR . '/vendor/autoload.php' ) ) {
-	require BLOCKPARTY_IFRAME_DIR . '/vendor/autoload.php';
-}
-
 /**
- * Registers the block using a `blocks-manifest.php` file, which improves the performance of block type registration.
- * Behind the scenes, it also registers all assets so they can be enqueued
- * through the block editor in the corresponding context.
- *
- * @see https://make.wordpress.org/core/2025/03/13/more-efficient-block-type-registration-in-6-8/
- * @see https://make.wordpress.org/core/2024/10/17/new-block-type-registration-apis-to-improve-performance-in-wordpress-6-7/
+ * Bootstrap the plugin.
  */
 function init() {
-	/**
-	 * Registers the block(s) metadata from the `blocks-manifest.php` and registers the block type(s)
-	 * based on the registered block metadata.
-	 * Added in WordPress 6.8 to simplify the block metadata registration process added in WordPress 6.7.
-	 *
-	 * @see https://make.wordpress.org/core/2025/03/13/more-efficient-block-type-registration-in-6-8/
-	 */
-	if ( function_exists( 'wp_register_block_types_from_metadata_collection' ) ) {
-		wp_register_block_types_from_metadata_collection( __DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php' );
+	load_plugin_textdomain(
+		'blockparty-iframe',
+		false,
+		dirname( BLOCKPARTY_IFRAME_PLUGIN_BASENAME ) . '/languages'
+	);
 
-		init_i18n();
-		return;
-	}
+	register_block_type(
+		BLOCKPARTY_IFRAME_DIR . 'build/blockparty-iframe',
+		array(
+			'render_callback' => array( BlockRenderer::class, 'render' ),
+		)
+	);
 
-	/**
-	 * Registers the block(s) metadata from the `blocks-manifest.php` file.
-	 * Added to WordPress 6.7 to improve the performance of block type registration.
-	 *
-	 * @see https://make.wordpress.org/core/2024/10/17/new-block-type-registration-apis-to-improve-performance-in-wordpress-6-7/
-	 */
-	if ( function_exists( 'wp_register_block_metadata_collection' ) ) {
-		wp_register_block_metadata_collection( __DIR__ . '/build', __DIR__ . '/build/blocks-manifest.php' );
-	}
-	/**
-	 * Registers the block type(s) in the `blocks-manifest.php` file.
-	 *
-	 * @see https://developer.wordpress.org/reference/functions/register_block_type/
-	 */
-	$manifest_data = require __DIR__ . '/build/blocks-manifest.php';
-	foreach ( array_keys( $manifest_data ) as $block_type ) {
-		register_block_type( __DIR__ . "/build/{$block_type}" );
-	}
-
-	init_i18n();
+	wp_set_script_translations(
+		'blockparty-iframe-editor-script',
+		'blockparty-iframe',
+		BLOCKPARTY_IFRAME_DIR . 'languages'
+	);
 }
 
-add_action( 'init', __NAMESPACE__ . '\\init' );
-
-/**
- * Load the plugin translations.
- */
-function init_i18n() {
-	// Load available translations.
-	load_plugin_textdomain( 'blockparty-iframe', false, dirname( BLOCKPARTY_IFRAME_PLUGIN_BASENAME ) . '/languages' );
-
-	// Load translations for JS
-	wp_set_script_translations( 'blockparty-iframe-editor-script', 'blockparty-iframe', BLOCKPARTY_IFRAME_DIR . '/languages' );
-}
+add_action( 'init', __NAMESPACE__ . '\\init', 0 );
