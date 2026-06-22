@@ -25,11 +25,13 @@
 
         <!-- Exclude as we use the short array syntax over the long one. -->
         <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
-        <exclude name="Universal.Arrays.DisallowShortArraySyntax.Found"/>
+        <exclude name="Universal.Arrays.DisallowShortArraySyntax"/>
 
         <!-- Allow to use short ternary operators since they are very usefull. -->
         <exclude name="WordPress.PHP.DisallowShortTernary.Found"/>
     </rule>
+
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
 
     <config name="minimum_supported_wp_version" value="6.7"/>
 

@@ -40,9 +40,9 @@ function init() {
 
 	register_block_type(
 		BLOCKPARTY_IFRAME_DIR . 'build/blockparty-iframe',
-		array(
-			'render_callback' => array( BlockRenderer::class, 'render' ),
-		)
+		[
+			'render_callback' => [ BlockRenderer::class, 'render' ],
+		]
 	);
 
 	wp_set_script_translations(

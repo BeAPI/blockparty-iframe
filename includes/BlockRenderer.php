@@ -7,24 +7,22 @@ class BlockRenderer {
 	/**
 	 * Render the iframe block on the front end.
 	 *
-	 * @param array    $attributes Block attributes.
-	 * @param string   $content    Saved block content (unused for dynamic render).
-	 * @param \WP_Block $block      Block instance.
+	 * @param array $attributes Block attributes.
 	 *
 	 * @return string
 	 */
-	public static function render( $attributes, $content = '', $block = null ) {
+	public static function render( $attributes ) {
 		$url               = isset( $attributes['url'] ) ? trim( (string) $attributes['url'] ) : '';
 		$title             = isset( $attributes['title'] ) ? trim( (string) $attributes['title'] ) : '';
 		$lazyload          = ! empty( $attributes['lazyload'] );
 		$iframe_attributes = isset( $attributes['iframeAttributes'] ) && is_array( $attributes['iframeAttributes'] )
 			? $attributes['iframeAttributes']
-			: array();
+			: [];
 
 		if ( '' === $url || '' === $title ) {
 			return sprintf(
 				'<div %s></div>',
-				get_block_wrapper_attributes( array(), $block )
+				get_block_wrapper_attributes()
 			);
 		}
 
@@ -41,7 +39,7 @@ class BlockRenderer {
 
 		return sprintf(
 			'<div %1$s>%2$s</div>',
-			get_block_wrapper_attributes( array(), $block ),
+			get_block_wrapper_attributes(),
 			$iframe_html
 		);
 	}
@@ -93,10 +91,10 @@ class BlockRenderer {
 	 * @return bool
 	 */
 	private static function is_boolean_attribute( string $attribute_name ): bool {
-		$boolean_attrs = array(
+		$boolean_attrs = [
 			'allowfullscreen',
 			'allowpaymentrequest',
-		);
+		];
 
 		return in_array( strtolower( $attribute_name ), $boolean_attrs, true );
 	}
@@ -109,7 +107,7 @@ class BlockRenderer {
 	 * @return bool
 	 */
 	private static function is_excluded_iframe_attribute( string $attribute_name ): bool {
-		$excluded_attrs = array(
+		$excluded_attrs = [
 			'src',
 			'loading',
 			'title',
@@ -123,7 +121,7 @@ class BlockRenderer {
 			'align',
 			'longdesc',
 			'name',
-		);
+		];
 
 		return in_array( strtolower( $attribute_name ), $excluded_attrs, true );
 	}
