@@ -20,7 +20,7 @@ import { aspectRatio } from '@wordpress/icons';
  * Internal dependencies
  */
 import Edit from './edit';
-import save from './save';
+import deprecatedSave from './save';
 import metadata from './block.json';
 
 /**
@@ -36,8 +36,11 @@ registerBlockType( metadata.name, {
 	 */
 	edit: Edit,
 
-	/**
-	 * @see ./save.js
-	 */
-	save,
+	deprecated: [
+		{
+			attributes: metadata.attributes,
+			supports: metadata.supports,
+			save: deprecatedSave,
+		},
+	],
 } );
