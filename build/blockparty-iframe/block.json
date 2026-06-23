@@ -1,0 +1,55 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "blockparty/iframe",
+  "version": "1.2.0",
+  "title": "Iframe",
+  "category": "widgets",
+  "description": "Display an embedded frame.",
+  "example": {},
+  "supports": {
+    "align": [
+      "wide",
+      "full"
+    ],
+    "dimensions": {
+      "aspectRatio": true,
+      "height": true,
+      "width": true
+    },
+    "html": false
+  },
+  "attributes": {
+    "lazyload": {
+      "type": "boolean",
+      "default": false
+    },
+    "title": {
+      "type": "string",
+      "default": ""
+    },
+    "url": {
+      "type": "string",
+      "default": ""
+    },
+    "iframeAttributes": {
+      "type": "array",
+      "default": [],
+      "items": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "textdomain": "blockparty-iframe",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css",
+  "style": "file:./style-index.css"
+}
