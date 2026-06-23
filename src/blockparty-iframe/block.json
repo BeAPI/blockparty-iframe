@@ -2,13 +2,16 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "blockparty/iframe",
-	"version": "1.1.2",
+	"version": "1.2.0",
 	"title": "Iframe",
 	"category": "widgets",
 	"description": "Display an embedded frame.",
 	"example": {},
 	"supports": {
-		"align": [ "wide", "full" ],
+		"align": [
+			"wide",
+			"full"
+		],
 		"dimensions": {
 			"aspectRatio": true,
 			"height": true,

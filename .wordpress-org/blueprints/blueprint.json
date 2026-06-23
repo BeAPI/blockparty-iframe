@@ -11,7 +11,7 @@
 			"pluginData": {
 				"resource": "git:directory",
 				"url": "https://github.com/BeAPI/blockparty-iframe",
-				"ref": "1.1.2",
+				"ref": "1.2.0",
 				"refType": "tag"
 			},
 			"options": {

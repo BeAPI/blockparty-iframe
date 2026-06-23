@@ -2,7 +2,7 @@
 Contributors:      Be API Technical team
 Tags:              block, iframe, editor
 Tested up to:      6.7
-Stable tag:        1.1.2
+Stable tag:        1.2.0
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,9 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 1.2.0 =
+* Dynamic block: iframe markup is rendered in PHP on the front end (block attributes are stored in post content). Existing posts with the previous static HTML remain supported in the editor.
 
 = 1.1.2 =
 * WordPress.org Playground blueprint: write the demo mu-plugin with a nowdoc so the embedded wp_kses_allowed_html snippet is valid PHP (avoids a fatal on load). Blueprint install ref set to tag 1.1.2.
