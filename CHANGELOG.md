@@ -7,6 +7,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2026-04-22
+
+### Changed
+
+- **Dynamic block rendering**: The iframe is rendered on the server via `BlockRenderer` and a `render_callback` (same pattern as blockparty-post-sharing). Post content stores block attributes only; frontend markup is built at display time.
+- **Plugin bootstrap**: Register the block with `register_block_type()` and `render_callback` instead of metadata-collection-only registration.
+
+### Added
+
+- **`includes/BlockRenderer.php`**: PHP render for the wrapper (`get_block_wrapper_attributes()`), `loading`, and custom iframe attributes (parity with the former `save.js` logic).
+- **Block deprecation**: The previous static `save.js` output is kept as a deprecated block definition so existing posts with serialized HTML remain valid in the editor.
+
+### Developer
+
+- **Composer autoload**: PSR-4 `Blockparty\Iframe\` → `includes/`.
+- **PHPCS**: Enforce short array syntax (`[]`) via `Generic.Arrays.DisallowLongArraySyntax`; fix exclusion of `Universal.Arrays.DisallowShortArraySyntax` from WordPress-Core.
+- **Composer**: `composer.lock` ignored in git; dev dependency pins refreshed (`dealerdirect/phpcodesniffer-composer-installer`, `wp-coding-standards/wpcs`).
+
 ## [1.1.2] - 2026-04-21
 
 ### Fixed
@@ -141,6 +159,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+[1.2.0]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.2.0
 [1.1.2]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.1.2
 [1.1.1]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.1.1
 [1.1.0]: https://github.com/BeAPI/blockparty-iframe/releases/tag/1.1.0
