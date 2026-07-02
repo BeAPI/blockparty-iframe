@@ -160,7 +160,10 @@ export default function Edit( { attributes, setAttributes } ) {
 							label={ __( 'Source', 'blockparty-iframe' ) }
 							value={ iframeData.url }
 							onChange={ handleUrlChange }
-							placeholder={ `https://... or <iframe src="https://..."` }
+							placeholder={ __(
+								'https://… or <iframe src="https://…"',
+								'blockparty-iframe'
+							) }
 							help={ __(
 								'You can either paste a URL or the iframe code.',
 								'blockparty-iframe'
