@@ -31,13 +31,73 @@ export function isBooleanAttribute( attributeName ) {
 }
 
 /**
- * Convert iframe attributes array to props object for React.
- * Handles boolean attributes and React prop name mapping correctly.
+ * Iframe attribute names that can be added by editors.
+ *
+ * Any other attribute (event handlers such as `onload`, `srcdoc`, …) is
+ * dropped: block attributes are controlled by users who may not have the
+ * `unfiltered_html` capability. Keep in sync with BlockRenderer.php.
+ */
+const ALLOWED_ATTRIBUTES = [
+	'allow',
+	'allowfullscreen',
+	'allowpaymentrequest',
+	'id',
+	'referrerpolicy',
+	'sandbox',
+];
+
+/**
+ * Check if an iframe attribute can be rendered.
+ *
+ * @param {string} attributeName - The name of the attribute to check.
+ * @return {boolean} True if the attribute is allowed, false otherwise.
+ */
+export function isAllowedIframeAttribute( attributeName ) {
+	if ( typeof attributeName !== 'string' ) {
+		return false;
+	}
+
+	const name = attributeName.toLowerCase();
+
+	if ( ! /^[a-z][a-z0-9-]*$/.test( name ) ) {
+		return false;
+	}
+
+	return (
+		ALLOWED_ATTRIBUTES.includes( name ) ||
+		/^(aria|data)-[a-z0-9-]+$/.test( name )
+	);
+}
+
+/**
+ * Check if a URL can be used as iframe source (http or https only).
+ *
+ * @param {string} url - The URL to check.
+ * @return {boolean} True if the URL is safe, false otherwise.
+ */
+export function isSafeIframeUrl( url ) {
+	if ( typeof url !== 'string' || ! url.length ) {
+		return false;
+	}
+
+	try {
+		const { protocol } = new URL( url );
+		return protocol === 'http:' || protocol === 'https:';
+	} catch ( error ) {
+		return false;
+	}
+}
+
+/**
+ * Convert an iframe attributes array to a React props object, without filtering.
+ *
+ * Only meant for the deprecated save function, whose output must match the
+ * markup previously stored in post content and is never mounted in the DOM.
  *
  * @param {Array} attributes - Array of {key, value} objects.
  * @return {Object} Props object for React component.
  */
-export function convertAttributesToProps( attributes ) {
+export function convertAttributesToRawProps( attributes ) {
 	return Object.fromEntries(
 		( attributes || [] ).map( ( attr ) => {
 			// Map HTML attribute name to React prop name
@@ -55,29 +115,19 @@ export function convertAttributesToProps( attributes ) {
 }
 
 /**
- * Check if an iframe attribute should be excluded.
+ * Convert iframe attributes array to props object for React.
+ * Drops non allowed attributes, handles boolean attributes and React prop
+ * name mapping.
  *
- * @param {string} attributeName - The name of the attribute to check.
- * @return {boolean} True if the attribute should be excluded, false otherwise.
+ * @param {Array} attributes - Array of {key, value} objects.
+ * @return {Object} Props object for React component.
  */
-export function isExcludedIframeAttribute( attributeName ) {
-	const excludedAttrs = [
-		'src', // Managed separately
-		'loading', // Managed by lazyload option
-		'title', // Managed separately
-		'width', // Managed by block dimension supports
-		'height', // Managed by block dimension supports
-		'style', // Requires object format in React, not string
-		'frameborder', // Deprecated HTML attribute
-		'marginwidth', // Deprecated HTML attribute
-		'marginheight', // Deprecated HTML attribute
-		'scrolling', // Deprecated HTML attribute
-		'align', // Deprecated HTML attribute
-		'longdesc', // Deprecated HTML attribute
-		'name', // Can cause conflicts
-	];
-
-	return excludedAttrs.includes( attributeName.toLowerCase() );
+export function convertAttributesToProps( attributes ) {
+	return convertAttributesToRawProps(
+		( attributes || [] ).filter( ( attr ) =>
+			isAllowedIframeAttribute( attr?.key )
+		)
+	);
 }
 
 /**
@@ -98,11 +148,12 @@ export function parseIframeCode( value ) {
 	// Extract only the opening tag (ignore any content inside iframe)
 	const iframeTag = match[ 0 ];
 
-	// Create a temporary DOM element to parse the HTML
-	// Use a self-closing iframe to avoid parsing issues with content
-	const tempDiv = document.createElement( 'div' );
-	tempDiv.insertAdjacentHTML( 'beforeend', iframeTag + '</iframe>' );
-	const iframeElement = tempDiv.querySelector( 'iframe' );
+	// Parse in an inert document so nothing is loaded or executed.
+	const doc = new window.DOMParser().parseFromString(
+		iframeTag + '</iframe>',
+		'text/html'
+	);
+	const iframeElement = doc.querySelector( 'iframe' );
 
 	if ( ! iframeElement ) {
 		return null;
@@ -114,11 +165,11 @@ export function parseIframeCode( value ) {
 	// Extract title attribute
 	const title = iframeElement.getAttribute( 'title' ) || '';
 
-	// Extract all other attributes (excluding managed and deprecated ones)
+	// Extract other allowed attributes only
 	const attributes = [];
 
 	for ( const attr of iframeElement.attributes ) {
-		if ( ! isExcludedIframeAttribute( attr.name ) ) {
+		if ( isAllowedIframeAttribute( attr.name ) ) {
 			// For boolean attributes, store 'true' as value if present
 			const attrValue = isBooleanAttribute( attr.name )
 				? 'true'

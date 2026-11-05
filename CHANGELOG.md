@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Security
+
+- **Iframe attributes allowlist**: Only `allow`, `allowfullscreen`, `allowpaymentrequest`, `id`, `referrerpolicy`, `sandbox`, `aria-*` and `data-*` attributes are rendered, in the editor and on the front end. Event handlers (`onload`…), `srcdoc` and malformed attribute names are dropped, closing a stored XSS reachable by contributors.
+- **Iframe source protocols**: The iframe source must be an `http` or `https` URL, in the editor and on the front end (blocks `javascript:` URLs in the editor).
+
 ## [1.2.0] - 2026-04-22
 
 ### Changed
