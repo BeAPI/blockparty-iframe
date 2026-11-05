@@ -2,7 +2,7 @@
 Contributors:      Be API Technical team
 Tags:              block, iframe, editor
 Tested up to:      6.7
-Stable tag:        1.2.0
+Stable tag:        1.2.1
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,11 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 1.2.1 =
+* Security: only allowlisted iframe attributes are rendered (allow, allowfullscreen, allowpaymentrequest, id, referrerpolicy, sandbox, aria-*, data-*). Event handlers, srcdoc and malformed attribute names are dropped, fixing a stored XSS reachable by contributors.
+* Security: the iframe source must be an http or https URL, in the editor and on the front end.
+* Translations: add missing French translations.
 
 = 1.2.0 =
 * Dynamic block: iframe markup is rendered in PHP on the front end (block attributes are stored in post content). Existing posts with the previous static HTML remain supported in the editor.
