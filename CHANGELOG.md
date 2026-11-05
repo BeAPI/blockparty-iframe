@@ -7,6 +7,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Security
+
+- **Iframe `allow` policy**: The `allow` attribute value is filtered against an allowlist of low-risk Permissions Policy features (`accelerometer`, `autoplay`, `clipboard-write`, `encrypted-media`, `fullscreen`, `gyroscope`, `picture-in-picture`, `web-share`), in the editor and on the front end. Origin lists are dropped, so features only apply to the iframe origin. Users without `unfiltered_html` can no longer delegate camera, microphone, geolocation, screen capture or payment to an embedded page. The list can be extended on the front end with the `blockparty_iframe_allowed_features` filter.
+- **`allowpaymentrequest` removed**: This obsolete attribute is no longer rendered.
+
 ## [1.2.1] - 2026-11-05
 
 ### Security
