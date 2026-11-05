@@ -8,10 +8,7 @@
 	"description": "Display an embedded frame.",
 	"example": {},
 	"supports": {
-		"align": [
-			"wide",
-			"full"
-		],
+		"align": [ "wide", "full" ],
 		"dimensions": {
 			"aspectRatio": true,
 			"height": true,

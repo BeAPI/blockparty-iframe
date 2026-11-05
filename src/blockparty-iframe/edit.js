@@ -26,7 +26,6 @@ import {
 	ToolbarGroup,
 	ToolbarButton,
 } from '@wordpress/components';
-import { isURL } from '@wordpress/url';
 
 import { useState } from '@wordpress/element';
 
@@ -39,7 +38,11 @@ import { useState } from '@wordpress/element';
 import './editor.scss';
 
 import { aspectRatio } from '@wordpress/icons';
-import { convertAttributesToProps, parseIframeCode } from './utils';
+import {
+	convertAttributesToProps,
+	isSafeIframeUrl,
+	parseIframeCode,
+} from './utils';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -71,7 +74,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	// hasConfirmed = l’utilisateur a validé l’ajout de l’iframe
 	const initialConfirmed = Boolean(
 		iframeData.url?.length &&
-			isURL( iframeData.url ) &&
+			isSafeIframeUrl( iframeData.url ) &&
 			iframeData.title?.length
 	);
 	const [ hasConfirmed, setHasConfirmed ] = useState( initialConfirmed );
@@ -79,7 +82,7 @@ export default function Edit( { attributes, setAttributes } ) {
 	// Validation
 	const isIframeElligible = Boolean(
 		iframeData.url?.length &&
-			isURL( iframeData.url ) &&
+			isSafeIframeUrl( iframeData.url ) &&
 			iframeData.title?.length
 	);
 
@@ -160,7 +163,10 @@ export default function Edit( { attributes, setAttributes } ) {
 							label={ __( 'Source', 'blockparty-iframe' ) }
 							value={ iframeData.url }
 							onChange={ handleUrlChange }
-							placeholder={ `https://... or <iframe src="https://..."` }
+							placeholder={ __(
+								'https://… or <iframe src="https://…"',
+								'blockparty-iframe'
+							) }
 							help={ __(
 								'You can either paste a URL or the iframe code.',
 								'blockparty-iframe'
