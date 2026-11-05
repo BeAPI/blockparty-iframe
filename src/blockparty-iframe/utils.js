@@ -40,11 +40,49 @@ export function isBooleanAttribute( attributeName ) {
 const ALLOWED_ATTRIBUTES = [
 	'allow',
 	'allowfullscreen',
-	'allowpaymentrequest',
 	'id',
 	'referrerpolicy',
 	'sandbox',
 ];
+
+/**
+ * Permissions Policy features that editors can delegate through `allow`.
+ *
+ * Sensitive features (camera, microphone, geolocation, display-capture,
+ * payment…) are left out. Keep in sync with BlockRenderer.php.
+ */
+const ALLOWED_FEATURES = [
+	'accelerometer',
+	'autoplay',
+	'clipboard-write',
+	'encrypted-media',
+	'fullscreen',
+	'gyroscope',
+	'picture-in-picture',
+	'web-share',
+];
+
+/**
+ * Keep only allowlisted features from an `allow` Permissions Policy value.
+ * Origin lists are dropped, so each feature defaults to the iframe origin.
+ *
+ * @param {string} value - Raw `allow` attribute value.
+ * @return {string} Sanitized value, empty when no feature is kept.
+ */
+export function sanitizeAllowValue( value ) {
+	if ( typeof value !== 'string' ) {
+		return '';
+	}
+
+	const features = value
+		.split( ';' )
+		.map( ( directive ) =>
+			( directive.trim().split( /\s+/ )[ 0 ] || '' ).toLowerCase()
+		)
+		.filter( ( name ) => ALLOWED_FEATURES.includes( name ) );
+
+	return [ ...new Set( features ) ].join( '; ' );
+}
 
 /**
  * Check if an iframe attribute can be rendered.
@@ -124,9 +162,16 @@ export function convertAttributesToRawProps( attributes ) {
  */
 export function convertAttributesToProps( attributes ) {
 	return convertAttributesToRawProps(
-		( attributes || [] ).filter( ( attr ) =>
-			isAllowedIframeAttribute( attr?.key )
-		)
+		( attributes || [] )
+			.filter( ( attr ) => isAllowedIframeAttribute( attr?.key ) )
+			.map( ( attr ) =>
+				attr.key.toLowerCase() === 'allow'
+					? { ...attr, value: sanitizeAllowValue( attr.value ) }
+					: attr
+			)
+			.filter(
+				( attr ) => attr.key.toLowerCase() !== 'allow' || attr.value
+			)
 	);
 }
 

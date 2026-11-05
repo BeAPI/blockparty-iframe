@@ -23,10 +23,30 @@ class BlockRenderer {
 	private const ALLOWED_ATTRIBUTES = [
 		'allow',
 		'allowfullscreen',
-		'allowpaymentrequest',
 		'id',
 		'referrerpolicy',
 		'sandbox',
+	];
+
+	/**
+	 * Permissions Policy features that editors can delegate through `allow`.
+	 *
+	 * Sensitive features (camera, microphone, geolocation, display-capture,
+	 * payment…) are left out: users without `unfiltered_html` must not be
+	 * able to grant them to a third-party document on behalf of the site.
+	 * Keep in sync with utils.js.
+	 *
+	 * @var string[]
+	 */
+	private const ALLOWED_FEATURES = [
+		'accelerometer',
+		'autoplay',
+		'clipboard-write',
+		'encrypted-media',
+		'fullscreen',
+		'gyroscope',
+		'picture-in-picture',
+		'web-share',
 	];
 
 	/**
@@ -93,6 +113,14 @@ class BlockRenderer {
 				continue;
 			}
 
+			if ( 'allow' === $key ) {
+				$value = self::sanitize_allow_value( $value );
+
+				if ( '' === $value ) {
+					continue;
+				}
+			}
+
 			if ( self::is_boolean_attribute( $key ) ) {
 				if ( 'true' === $value || '' === $value ) {
 					$html .= ' ' . $key;
@@ -120,10 +148,40 @@ class BlockRenderer {
 	private static function is_boolean_attribute( string $attribute_name ): bool {
 		$boolean_attrs = [
 			'allowfullscreen',
-			'allowpaymentrequest',
 		];
 
 		return in_array( strtolower( $attribute_name ), $boolean_attrs, true );
+	}
+
+	/**
+	 * Keep only allowlisted features from an `allow` Permissions Policy value.
+	 *
+	 * Origin lists are dropped, so each kept feature defaults to the iframe
+	 * source origin only.
+	 *
+	 * @param string $value Raw `allow` attribute value.
+	 *
+	 * @return string Sanitized value, empty when no feature is kept.
+	 */
+	private static function sanitize_allow_value( string $value ): string {
+		/**
+		 * Filters the Permissions Policy features that editors can delegate to an iframe.
+		 *
+		 * @param string[] $features Allowed feature names.
+		 */
+		$features = (array) apply_filters( 'blockparty_iframe_allowed_features', self::ALLOWED_FEATURES );
+		$kept     = [];
+
+		foreach ( explode( ';', $value ) as $directive ) {
+			$parts = preg_split( '/\s+/', trim( $directive ) );
+			$name  = is_array( $parts ) ? strtolower( $parts[0] ) : '';
+
+			if ( '' !== $name && in_array( $name, $features, true ) ) {
+				$kept[ $name ] = $name;
+			}
+		}
+
+		return implode( '; ', $kept );
 	}
 
 	/**
