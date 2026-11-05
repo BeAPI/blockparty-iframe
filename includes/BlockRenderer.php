@@ -5,6 +5,31 @@ namespace Blockparty\Iframe;
 class BlockRenderer {
 
 	/**
+	 * URL protocols allowed for the iframe source.
+	 *
+	 * @var string[]
+	 */
+	private const ALLOWED_PROTOCOLS = [ 'http', 'https' ];
+
+	/**
+	 * Iframe attribute names that can be added by editors.
+	 *
+	 * Any other attribute (event handlers such as `onload`, `srcdoc`, …) is
+	 * dropped, since block attributes are controlled by users who may not
+	 * have the `unfiltered_html` capability.
+	 *
+	 * @var string[]
+	 */
+	private const ALLOWED_ATTRIBUTES = [
+		'allow',
+		'allowfullscreen',
+		'allowpaymentrequest',
+		'id',
+		'referrerpolicy',
+		'sandbox',
+	];
+
+	/**
 	 * Render the iframe block on the front end.
 	 *
 	 * @param array $attributes Block attributes.
@@ -19,7 +44,9 @@ class BlockRenderer {
 			? $attributes['iframeAttributes']
 			: [];
 
-		if ( '' === $url || '' === $title ) {
+		$safe_url = '' !== $url ? esc_url( $url, self::ALLOWED_PROTOCOLS ) : '';
+
+		if ( '' === $safe_url || '' === $title ) {
 			return sprintf(
 				'<div %s></div>',
 				get_block_wrapper_attributes()
@@ -32,7 +59,7 @@ class BlockRenderer {
 		$iframe_html = sprintf(
 			'<iframe title="%1$s" src="%2$s" loading="%3$s"%4$s></iframe>',
 			esc_attr( $title ),
-			esc_url( $url ),
+			$safe_url,
 			esc_attr( $loading ),
 			$extra_attrs
 		);
@@ -59,23 +86,23 @@ class BlockRenderer {
 				continue;
 			}
 
-			$key   = (string) $attribute['key'];
+			$key   = strtolower( (string) $attribute['key'] );
 			$value = isset( $attribute['value'] ) ? (string) $attribute['value'] : '';
 
-			if ( self::is_excluded_iframe_attribute( $key ) ) {
+			if ( ! self::is_allowed_iframe_attribute( $key ) ) {
 				continue;
 			}
 
 			if ( self::is_boolean_attribute( $key ) ) {
 				if ( 'true' === $value || '' === $value ) {
-					$html .= ' ' . esc_attr( strtolower( $key ) );
+					$html .= ' ' . $key;
 				}
 				continue;
 			}
 
 			$html .= sprintf(
 				' %1$s="%2$s"',
-				esc_attr( $key ),
+				$key,
 				esc_attr( $value )
 			);
 		}
@@ -100,29 +127,24 @@ class BlockRenderer {
 	}
 
 	/**
-	 * Check if an iframe attribute should be excluded from custom output.
+	 * Check if an iframe attribute can be output.
 	 *
-	 * @param string $attribute_name Attribute name.
+	 * The name must be a plain lowercase attribute name (no whitespace, quotes
+	 * or `=`), and either be allowlisted or be an `aria-*` / `data-*` attribute.
+	 *
+	 * @param string $attribute_name Lowercased attribute name.
 	 *
 	 * @return bool
 	 */
-	private static function is_excluded_iframe_attribute( string $attribute_name ): bool {
-		$excluded_attrs = [
-			'src',
-			'loading',
-			'title',
-			'width',
-			'height',
-			'style',
-			'frameborder',
-			'marginwidth',
-			'marginheight',
-			'scrolling',
-			'align',
-			'longdesc',
-			'name',
-		];
+	private static function is_allowed_iframe_attribute( string $attribute_name ): bool {
+		if ( 1 !== preg_match( '/^[a-z][a-z0-9-]*$/', $attribute_name ) ) {
+			return false;
+		}
 
-		return in_array( strtolower( $attribute_name ), $excluded_attrs, true );
+		if ( in_array( $attribute_name, self::ALLOWED_ATTRIBUTES, true ) ) {
+			return true;
+		}
+
+		return 1 === preg_match( '/^(aria|data)-[a-z0-9-]+$/', $attribute_name );
 	}
 }
