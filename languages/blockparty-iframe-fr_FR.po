@@ -3,15 +3,15 @@ msgstr ""
 "Project-Id-Version: Blockparty Iframe 1.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/blockparty-"
 "iframe\n"
-"POT-Creation-Date: 2026-01-12T10:29:55+00:00\n"
-"PO-Revision-Date: 2026-01-12 11:32+0100\n"
+"POT-Creation-Date: 2026-07-02T15:00:50+00:00\n"
+"PO-Revision-Date: 2026-07-02 17:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.8\n"
+"X-Generator: Poedit 3.9\n"
 "X-Domain: blockparty-iframe\n"
 
 #. Plugin Name of the plugin
@@ -57,6 +57,10 @@ msgstr "Veuillez remplir la source du cadre ainsi que son titre."
 #: build/blockparty-iframe/index.js:1
 msgid "Source"
 msgstr "Source"
+
+#: build/blockparty-iframe/index.js:1
+msgid "https://… or <iframe src=\"https://…\""
+msgstr "https://… ou <iframe src=\"https://…\""
 
 #: build/blockparty-iframe/index.js:1
 msgid "You can either paste a URL or the iframe code."
