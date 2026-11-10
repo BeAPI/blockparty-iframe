@@ -30,6 +30,12 @@ import {
 import { useState } from '@wordpress/element';
 
 /**
+ * Default export: the named `ServerSideRender` export only exists in the
+ * `wp.serverSideRender` global since WordPress 6.9, and the plugin supports 6.7.
+ */
+import ServerSideRender from '@wordpress/server-side-render';
+
+/**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
  * Those files can contain any CSS code that gets applied to the editor.
  *
@@ -38,11 +44,7 @@ import { useState } from '@wordpress/element';
 import './editor.scss';
 
 import { aspectRatio } from '@wordpress/icons';
-import {
-	convertAttributesToProps,
-	isSafeIframeUrl,
-	parseIframeCode,
-} from './utils';
+import { isSafeIframeUrl, parseIframeCode } from './utils';
 
 /**
  * The edit function describes the structure of your block in the context of the
@@ -197,13 +199,13 @@ export default function Edit( { attributes, setAttributes } ) {
 			) }
 
 			{ showIframe && (
-				<iframe
-					title={ iframeData.title }
-					src={ iframeData.url }
-					loading={ lazyload ? 'lazy' : 'eager' }
-					{ ...convertAttributesToProps(
-						iframeData.iframeAttributes
-					) }
+				// Preview with the front-end renderer so iframe attributes are
+				// filtered in one place only (BlockRenderer.php).
+				<ServerSideRender
+					block="blockparty/iframe"
+					attributes={ attributes }
+					className="blockparty-iframe__preview"
+					skipBlockSupportAttributes
 				/>
 			) }
 		</div>

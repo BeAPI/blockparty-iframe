@@ -11,8 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Security
 
-- **Iframe `allow` policy**: The `allow` attribute value is filtered against an allowlist of low-risk Permissions Policy features (`accelerometer`, `autoplay`, `clipboard-write`, `encrypted-media`, `fullscreen`, `gyroscope`, `picture-in-picture`, `web-share`), in the editor and on the front end. Origin lists are dropped, so features only apply to the iframe origin. Users without `unfiltered_html` can no longer delegate camera, microphone, geolocation, screen capture or payment to an embedded page. The list can be extended on the front end with the `blockparty_iframe_allowed_features` filter.
+- **Iframe `allow` policy**: The `allow` attribute value is filtered against an allowlist of low-risk Permissions Policy features (`accelerometer`, `autoplay`, `clipboard-write`, `encrypted-media`, `fullscreen`, `gyroscope`, `picture-in-picture`, `web-share`). Origin lists are dropped, so features only apply to the iframe origin. Users without `unfiltered_html` can no longer delegate camera, microphone, geolocation, screen capture or payment to an embedded page. The list can be extended with the `blockparty_iframe_allowed_features` filter.
 - **`allowpaymentrequest` removed**: This obsolete attribute is no longer rendered.
+
+### Changed
+
+- **Editor preview rendered on the server**: The editor preview uses `ServerSideRender`, so it goes through `BlockRenderer` like the front end. Iframe attribute filtering (and the `blockparty_iframe_allowed_features` filter) now lives in PHP only; the duplicated JS allowlists are removed. Adds the `@wordpress/server-side-render` dependency. The preview shows the saved block attributes.
 
 ## [1.2.1] - 2026-11-05
 

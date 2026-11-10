@@ -31,11 +31,10 @@ export function isBooleanAttribute( attributeName ) {
 }
 
 /**
- * Iframe attribute names that can be added by editors.
+ * Iframe attribute names kept when parsing pasted iframe code.
  *
- * Any other attribute (event handlers such as `onload`, `srcdoc`, …) is
- * dropped: block attributes are controlled by users who may not have the
- * `unfiltered_html` capability. Keep in sync with BlockRenderer.php.
+ * Input convenience only, not a security boundary: the editor preview and the
+ * front end are both rendered by BlockRenderer.php, which filters attributes.
  */
 const ALLOWED_ATTRIBUTES = [
 	'allow',
@@ -46,49 +45,10 @@ const ALLOWED_ATTRIBUTES = [
 ];
 
 /**
- * Permissions Policy features that editors can delegate through `allow`.
- *
- * Sensitive features (camera, microphone, geolocation, display-capture,
- * payment…) are left out. Keep in sync with BlockRenderer.php.
- */
-const ALLOWED_FEATURES = [
-	'accelerometer',
-	'autoplay',
-	'clipboard-write',
-	'encrypted-media',
-	'fullscreen',
-	'gyroscope',
-	'picture-in-picture',
-	'web-share',
-];
-
-/**
- * Keep only allowlisted features from an `allow` Permissions Policy value.
- * Origin lists are dropped, so each feature defaults to the iframe origin.
- *
- * @param {string} value - Raw `allow` attribute value.
- * @return {string} Sanitized value, empty when no feature is kept.
- */
-export function sanitizeAllowValue( value ) {
-	if ( typeof value !== 'string' ) {
-		return '';
-	}
-
-	const features = value
-		.split( ';' )
-		.map( ( directive ) =>
-			( directive.trim().split( /\s+/ )[ 0 ] || '' ).toLowerCase()
-		)
-		.filter( ( name ) => ALLOWED_FEATURES.includes( name ) );
-
-	return [ ...new Set( features ) ].join( '; ' );
-}
-
-/**
- * Check if an iframe attribute can be rendered.
+ * Check if an iframe attribute is kept when parsing pasted iframe code.
  *
  * @param {string} attributeName - The name of the attribute to check.
- * @return {boolean} True if the attribute is allowed, false otherwise.
+ * @return {boolean} True if the attribute is kept, false otherwise.
  */
 export function isAllowedIframeAttribute( attributeName ) {
 	if ( typeof attributeName !== 'string' ) {
@@ -103,7 +63,8 @@ export function isAllowedIframeAttribute( attributeName ) {
 
 	return (
 		ALLOWED_ATTRIBUTES.includes( name ) ||
-		/^(aria|data)-[a-z0-9-]+$/.test( name )
+		name.startsWith( 'aria-' ) ||
+		name.startsWith( 'data-' )
 	);
 }
 
@@ -149,29 +110,6 @@ export function convertAttributesToRawProps( attributes ) {
 
 			return [ propName, value ];
 		} )
-	);
-}
-
-/**
- * Convert iframe attributes array to props object for React.
- * Drops non allowed attributes, handles boolean attributes and React prop
- * name mapping.
- *
- * @param {Array} attributes - Array of {key, value} objects.
- * @return {Object} Props object for React component.
- */
-export function convertAttributesToProps( attributes ) {
-	return convertAttributesToRawProps(
-		( attributes || [] )
-			.filter( ( attr ) => isAllowedIframeAttribute( attr?.key ) )
-			.map( ( attr ) =>
-				attr.key.toLowerCase() === 'allow'
-					? { ...attr, value: sanitizeAllowValue( attr.value ) }
-					: attr
-			)
-			.filter(
-				( attr ) => attr.key.toLowerCase() !== 'allow' || attr.value
-			)
 	);
 }
 

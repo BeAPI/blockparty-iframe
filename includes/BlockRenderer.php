@@ -34,7 +34,6 @@ class BlockRenderer {
 	 * Sensitive features (camera, microphone, geolocation, display-capture,
 	 * payment…) are left out: users without `unfiltered_html` must not be
 	 * able to grant them to a third-party document on behalf of the site.
-	 * Keep in sync with utils.js.
 	 *
 	 * @var string[]
 	 */
@@ -50,7 +49,8 @@ class BlockRenderer {
 	];
 
 	/**
-	 * Render the iframe block on the front end.
+	 * Render the iframe block, on the front end and in the editor preview
+	 * (ServerSideRender), so attribute filtering only lives here.
 	 *
 	 * @param array $attributes Block attributes.
 	 *
@@ -199,10 +199,8 @@ class BlockRenderer {
 			return false;
 		}
 
-		if ( in_array( $attribute_name, self::ALLOWED_ATTRIBUTES, true ) ) {
-			return true;
-		}
-
-		return 1 === preg_match( '/^(aria|data)-[a-z0-9-]+$/', $attribute_name );
+		return in_array( $attribute_name, self::ALLOWED_ATTRIBUTES, true )
+			|| str_starts_with( $attribute_name, 'aria-' )
+			|| str_starts_with( $attribute_name, 'data-' );
 	}
 }
