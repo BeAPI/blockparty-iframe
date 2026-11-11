@@ -200,10 +200,11 @@ export default function Edit( { attributes, setAttributes } ) {
 
 			{ showIframe && (
 				// Preview with the front-end renderer so iframe attributes are
-				// filtered in one place only (BlockRenderer.php).
+				// filtered in one place only (BlockRenderer.php). Use the form
+				// state, which "View" shows before "Add iframe" saves it.
 				<ServerSideRender
 					block="blockparty/iframe"
-					attributes={ attributes }
+					attributes={ { ...attributes, ...iframeData } }
 					className="blockparty-iframe__preview"
 					skipBlockSupportAttributes
 				/>

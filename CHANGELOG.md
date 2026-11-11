@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Changed
 
-- **Editor preview rendered on the server**: The editor preview uses `ServerSideRender`, so it goes through `BlockRenderer` like the front end. Iframe attribute filtering (and the `blockparty_iframe_allowed_features` filter) now lives in PHP only; the duplicated JS allowlists are removed. Adds the `@wordpress/server-side-render` dependency. The preview shows the saved block attributes.
+- **Editor preview rendered on the server**: The editor preview uses `ServerSideRender`, so it goes through `BlockRenderer` like the front end. Iframe attribute filtering (and the `blockparty_iframe_allowed_features` filter) now lives in PHP only; the duplicated JS allowlists are removed. Adds the `@wordpress/server-side-render` dependency.
 
 ## [1.2.1] - 2026-11-05
 
