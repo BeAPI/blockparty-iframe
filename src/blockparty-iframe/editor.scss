@@ -9,4 +9,16 @@
 		pointer-events: none;
 		touch-action: none;
 	}
+
+	// The server-side rendered preview nests the front-end markup inside the
+	// block wrapper, which carries the dimensions: make it fill the wrapper.
+	// Nested selector needed to beat the front-end default aspect ratio.
+	.blockparty-iframe__preview {
+		height: 100%;
+
+		> .wp-block-blockparty-iframe {
+			aspect-ratio: auto;
+			height: 100%;
+		}
+	}
 }
