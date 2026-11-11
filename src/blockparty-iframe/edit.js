@@ -88,6 +88,10 @@ export default function Edit( { attributes, setAttributes } ) {
 			iframeData.title?.length
 	);
 
+	// Block supports (align, dimensions) already style the editor wrapper:
+	// skipBlockSupportAttributes keeps `style.dimensions`, so drop them here.
+	const { align, style, ...previewAttributes } = attributes;
+
 	const showPlaceholder = ! hasConfirmed;
 	const showIframe = hasConfirmed && isIframeElligible;
 
@@ -204,7 +208,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				// state, which "View" shows before "Add iframe" saves it.
 				<ServerSideRender
 					block="blockparty/iframe"
-					attributes={ { ...attributes, ...iframeData } }
+					attributes={ { ...previewAttributes, ...iframeData } }
 					className="blockparty-iframe__preview"
 					skipBlockSupportAttributes
 				/>
