@@ -1,0 +1,9 @@
+{
+	"$schema": "https://raw.githubusercontent.com/WordPress/gutenberg/trunk/schemas/json/wp-env.json",
+	"core": null,
+	"testsEnvironment": false,
+	"port": 8889,
+	"plugins": [
+		"."
+	]
+}

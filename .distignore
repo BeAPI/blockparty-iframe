@@ -3,6 +3,8 @@
 /.github
 /node_modules
 /src
+/tests
+/artifacts
 
 # Configuration files
 .distignore
@@ -11,8 +13,10 @@
 .gitignore
 .plugin-data
 .wp-env.json
+.wp-env.test.json
 grumphp.yml
 phpcs.xml.dist
+phpunit.xml.dist
 psalm.xml.dist
 
 # Dependency management

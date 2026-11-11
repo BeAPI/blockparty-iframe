@@ -1,0 +1,154 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow
+
+name: E2E Tests
+
+on: # yamllint disable-line rule:truthy
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '**/*.php'
+      - 'src/**'
+      - 'tests/playwright/**'
+      - 'composer.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.wp-env.test.json'
+      - '.github/workflows/tests-e2e.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    name: Build assets and prepare Chromium
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build plugin assets
+        run: npm run build
+
+      - name: Archive build assets
+        uses: actions/upload-artifact@v5
+        with:
+          name: dist-assets
+          path: build
+
+      - name: Cache Chromium
+        id: playwright-cache
+        uses: actions/cache@v5
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Chromium
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: npx playwright install chromium
+
+      # Artifacts lose executable permissions on individual files.
+      - name: Pack Chromium with executable permissions
+        run: tar -C "$HOME/.cache" -czf playwright-chromium.tar.gz ms-playwright
+
+      - name: Archive Chromium
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-chromium
+          path: playwright-chromium.tar.gz
+
+  test-e2e:
+    name: E2E - WP ${{ matrix.core || 'latest' }} / PHP ${{ matrix.php }}
+    needs: prepare
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1']
+        core: ['WordPress/WordPress#6.7', null]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version-file: 'package.json'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Restore build assets
+        uses: actions/download-artifact@v5
+        with:
+          name: dist-assets
+          path: build
+
+      - name: Restore Chromium
+        uses: actions/download-artifact@v5
+        with:
+          name: playwright-chromium
+          path: .
+
+      - name: Unpack Chromium with executable permissions
+        run: |
+          mkdir -p "$HOME/.cache"
+          tar -C "$HOME/.cache" -xzf playwright-chromium.tar.gz
+
+      - name: Install Chromium operating-system dependencies
+        run: npx playwright install-deps chromium
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      # The block renderer is loaded through the Composer autoloader.
+      - name: Install Composer dependencies
+        run: composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Launch test environment
+        env:
+          WP_ENV_PHP_VERSION: ${{ matrix.php }}
+          WP_ENV_CORE: ${{ matrix.core }}
+        run: npm run env:start-ci
+
+      - name: Run E2E tests
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
+        run: npm run test:e2e
+
+      - name: Sanitize Core version for artifact name
+        id: core-label
+        if: failure()
+        run: |
+          echo "core=${{ matrix.core || 'latest' }}" | tr '/\\#:*?"<>|' '-' >> "$GITHUB_OUTPUT"
+
+      - name: Archive failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: e2e-${{ steps.core-label.outputs.core }}-php-${{ matrix.php }}
+          path: artifacts/test-results
+          if-no-files-found: ignore
+
+      - name: Stop test environment
+        if: always()
+        continue-on-error: true
+        run: npm run env:stop-tests

@@ -86,7 +86,9 @@ blockparty-iframe/
 │       ├── editor.scss     # Editor styles
 │       └── style.scss      # Frontend styles
 ├── build/                  # Compiled assets
+├── includes/               # PHP classes (block renderer)
 ├── languages/              # Translation files
+├── tests/                  # PHPUnit, Jest and Playwright tests
 ├── blockparty-iframe.php   # Main plugin file
 ├── composer.json           # PHP dependencies
 └── package.json            # JavaScript dependencies
@@ -116,10 +118,10 @@ npm run format
 npm run plugin-zip
 
 # Start local development environment
-npm run start:env
+npm run env:start
 
 # Stop local development environment
-npm run stop:env
+npm run env:stop
 ```
 
 #### PHP
@@ -130,12 +132,6 @@ composer cs
 
 # Automatically fix code
 composer cb
-
-# Analyze with Psalm
-composer psalm
-
-# Run unit tests
-composer phpunit
 ```
 
 ### Coding Standards
@@ -144,7 +140,6 @@ The project follows WordPress coding standards:
 
 - **WPCS** (WordPress Coding Standards) for PHP
 - **ESLint** with WordPress rules for JavaScript
-- **Psalm** for PHP static analysis
 - **GrumPHP** to automate pre-commit checks
 
 ### Development Environment Setup
@@ -153,22 +148,85 @@ The plugin uses `@wordpress/env` to create a local WordPress development environ
 
 ```bash
 # Start the environment
-npm run start:env
+npm run env:start
 
 # Access WordPress
 # URL: http://localhost:8888
 # Default credentials: admin / password
 
 # Stop the environment
-npm run stop:env
+npm run env:stop
 ```
+
+### Tests
+
+Three suites cover the block, each at its own level:
+
+| Suite | Location | Covers |
+| --- | --- | --- |
+| PHPUnit | `tests/php/` | `BlockRenderer`: attribute allowlist, escaping, source protocols, `allow` policy and its filter |
+| Jest | `tests/js/` | Pure helpers of `src/blockparty-iframe/utils.js` |
+| Playwright | `tests/playwright/` | The block in the editor (form, server-side preview, inspector, deprecation) and on the front end |
+
+PHPUnit and Playwright run against an isolated WordPress site (`.wp-env.test.json`, port 8889), separate from the development site. Docker is required, and the plugin must be installed and built first, because `build/` and `vendor/` are not versioned:
+
+```bash
+composer install
+npm install
+npm run build
+```
+
+```bash
+# JavaScript unit tests (no WordPress needed)
+npm run test:unit:js
+
+# Start the test site (reused by the commands below)
+npm run env:start-ci
+
+# PHP tests, inside the test site container
+npm run test:php
+
+# End-to-end tests (installs the Playwright browsers on first run)
+npm run test:e2e
+
+# Same, with a visible browser or the Playwright UI
+npm run test:e2e-debug
+npm run test:e2e-ui
+
+# Stop the test site
+npm run env:stop-tests
+```
+
+Arguments are forwarded to the runners, for instance `npm run test:php -- --filter allow` or `npm run test:e2e -- --grep "lazy loading"`.
+
+To run the suites on another WordPress or PHP version, recreate the test site with wp-env overrides:
+
+```bash
+WP_ENV_CORE='WordPress/WordPress#6.7' WP_ENV_PHP_VERSION=8.1 npm run env:reset-tests
+```
+
+For a PHP coverage report, start the test site with Xdebug (`npm run env:start-tests`) and run `npm run test:php -- --coverage-html=coverage/ --coverage-text`.
+
+On pull requests, GitHub Actions runs PHPUnit and Playwright on WordPress 6.7 and on the latest release with PHP 8.1, and Jest once.
+
+#### Test tooling
+
+| Tool | Version | Why |
+| --- | --- | --- |
+| `@wordpress/scripts` | 31.8.0 | Build, Jest and Playwright runners. Below 33, the Playwright command is `test-playwright` (`test-e2e` still runs Puppeteer). |
+| `@wordpress/env` | 12.1.0 | Needs 11 or newer for `--config` and `testsEnvironment`, used to isolate the test site. |
+| `@playwright/test` | 1.58.2 | Range required by `@wordpress/scripts` 31.8. |
+| `@wordpress/e2e-test-utils-playwright` | 1.54.0 | WordPress fixtures (`admin`, `editor`, `requestUtils`). |
+| `phpunit/phpunit` | 9.6.38 | Latest major supported by the WordPress test library, compatible with PHP 8.1. |
+| `yoast/phpunit-polyfills` | 1.1.5 | Required by the WordPress test library. |
+
+The WordPress test library itself comes from wp-env (`WP_TESTS_DIR`), so it always matches the tested Core.
 
 ## 🔍 Code Quality
 
 The project integrates several quality tools:
 
 - **PHP_CodeSniffer**: PHP coding standards verification
-- **Psalm**: PHP static code analysis
 - **PHPCompatibility**: PHP compatibility verification
 - **PHP Parallel Lint**: PHP syntax error detection
 - **GrumPHP**: Pre-commit checks automation
@@ -201,7 +259,7 @@ Contributions are welcome! To contribute:
 Make sure your code:
 
 - Follows WordPress coding standards
-- Passes all quality tests (PHPCS, Psalm, ESLint)
+- Passes all quality checks (PHPCS, ESLint) and the test suites (PHPUnit, Jest, Playwright)
 - Is properly documented
 - Includes translations if necessary
 

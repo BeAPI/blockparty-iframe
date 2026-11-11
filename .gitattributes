@@ -3,6 +3,8 @@
 /.github export-ignore
 /node_modules export-ignore
 /src export-ignore
+/tests export-ignore
+/artifacts export-ignore
 
 # Configuration files
 /.distignore export-ignore
@@ -11,8 +13,10 @@
 /.gitignore export-ignore
 /.plugin-data export-ignore
 /.wp-env.json export-ignore
+/.wp-env.test.json export-ignore
 /grumphp.yml export-ignore
 /phpcs.xml.dist export-ignore
+/phpunit.xml.dist export-ignore
 /psalm.xml.dist export-ignore
 
 # Dependency management
