@@ -15,12 +15,24 @@
 		"make-pot": "wp i18n make-pot . languages/blockparty-iframe.pot --exclude=\"src\" --domain=blockparty-iframe",
 		"make-json": "wp i18n make-json languages/blockparty-iframe-fr_FR.po languages/ --no-purge",
 		"start": "wp-scripts start --blocks-manifest",
-		"env:start": "wp-env start --config=./wp-env.json",
-		"env:stop": "wp-env stop --config=./wp-env.json"
+		"env:start": "wp-env start",
+		"env:stop": "wp-env stop",
+		"env:start-tests": "wp-env start --xdebug=coverage --config=./.wp-env.test.json",
+		"env:start-ci": "wp-env start --config=./.wp-env.test.json",
+		"env:stop-tests": "wp-env stop --config=./.wp-env.test.json",
+		"env:reset-tests": "wp-env destroy --config=./.wp-env.test.json --force && wp-env start --xdebug=coverage --config=./.wp-env.test.json",
+		"env:cli-test": "wp-env run cli --config=./.wp-env.test.json",
+		"test:php": "wp-env run cli --config=./.wp-env.test.json --env-cwd=wp-content/plugins/blockparty-iframe/ -- ./vendor/bin/phpunit",
+		"test:unit:js": "wp-scripts test-unit-js",
+		"test:e2e": "wp-scripts test-playwright --config tests/playwright/playwright.config.js",
+		"test:e2e-debug": "wp-scripts test-playwright --headed --config tests/playwright/playwright.config.js",
+		"test:e2e-ui": "wp-scripts test-playwright --ui --config tests/playwright/playwright.config.js"
 	},
 	"devDependencies": {
-		"@wordpress/env": "latest",
-		"@wordpress/scripts": "latest",
+		"@playwright/test": "^1.58.2",
+		"@wordpress/e2e-test-utils-playwright": "^1.54.0",
+		"@wordpress/env": "^12.1.0",
+		"@wordpress/scripts": "^31.8.0",
 		"@wordpress/url": "^4.37.0",
 		"lodash": "^4.17.21"
 	},

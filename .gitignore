@@ -8,6 +8,10 @@ yarn-error.log*
 # Coverage directory used by tools like istanbul
 coverage
 
+# Test outputs (Playwright traces, PHPUnit cache)
+/artifacts/
+.phpunit.result.cache
+
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
 build/

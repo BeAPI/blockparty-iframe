@@ -7,6 +7,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Automated tests**: PHPUnit tests for `BlockRenderer`, Jest tests for the editor helpers and Playwright end-to-end tests for the block in the editor and on the front end, run on pull requests against WordPress 6.7 and the latest release.
+
+### Changed
+
+- **Development tooling**: `@wordpress/scripts` 31.8 and `@wordpress/env` 12.1 replace the `latest` ranges. The `env:start` and `env:stop` scripts are fixed, and the unusable `composer phpunit` script is removed in favour of `npm run test:php`.
+
 ## [1.2.2] - 2026-11-11
 
 ### Security
