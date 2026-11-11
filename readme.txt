@@ -2,7 +2,7 @@
 Contributors:      Be API Technical team
 Tags:              block, iframe, editor
 Tested up to:      6.7
-Stable tag:        1.2.1
+Stable tag:        1.2.2
 License:           GPL-2.0-or-later
 License URI:       https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,11 @@ directory take precedence. For example, `/assets/screenshot-1.png` would win ove
 2. This is the second screen shot
 
 == Changelog ==
+
+= 1.2.2 =
+* Security: the iframe allow attribute only keeps low-risk features (accelerometer, autoplay, clipboard-write, encrypted-media, fullscreen, gyroscope, picture-in-picture, web-share), without origin lists. Users without unfiltered_html can no longer grant camera, microphone, geolocation, screen capture or payment to an embedded page. The list can be extended with the blockparty_iframe_allowed_features filter.
+* Security: the obsolete allowpaymentrequest attribute is no longer rendered.
+* Editor: the block preview is rendered on the server, with the same filtering as the front end.
 
 = 1.2.1 =
 * Security: only allowlisted iframe attributes are rendered (allow, allowfullscreen, allowpaymentrequest, id, referrerpolicy, sandbox, aria-*, data-*). Event handlers, srcdoc and malformed attribute names are dropped, fixing a stored XSS reachable by contributors.
